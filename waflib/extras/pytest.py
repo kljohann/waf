@@ -136,11 +136,13 @@ def pytest_process_use(self):
 			if not isinstance(tg.link_task, ccroot.stlink_task):
 				extend_unique(self.pytest_dep_nodes, tg.link_task.outputs)
 				extend_unique(self.pytest_libpaths, tg.link_task.env.LIBPATH)
-				extend_unique(self.pytest_libpaths, [tg.link_task.outputs[0].get_bld().parent.abspath()])
+				bldpath = tg.link_task.outputs[0].get_bld().parent.abspath()
+				extend_unique(self.pytest_libpaths, [bldpath])
 
 				if 'pyext' in tg.features:
 					# If the taskgen is extending Python we also want to add it o the PYTHONPATH.
 					extend_unique(self.pytest_libpaths, tg.link_task.env.LIBPATH_PYEXT)
+					extend_unique(self.pytest_paths, [bldpath])
 
 
 @TaskGen.feature('pytest')
